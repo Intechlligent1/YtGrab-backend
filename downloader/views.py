@@ -1,5 +1,3 @@
-
-
 import os
 from pathlib import Path
 from rest_framework.response import Response
@@ -47,7 +45,6 @@ def download_video(request):
         }
     }
 
-    # Detect platform if not specified
     if platform == 'auto':
         platform_extractors = {
             'youtube': 'youtube.com',
@@ -60,9 +57,8 @@ def download_video(request):
                 platform = detected_platform
                 break
         else:
-            platform = 'youtube'  # default to YouTube
+            platform = 'youtube'
 
-    # Select format map based on platform
     format_map = platform_format_map.get(platform, platform_format_map['youtube'])
 
     ydl_opts = {
@@ -80,12 +76,10 @@ def download_video(request):
         'ignoreerrors': True,
         'geo_bypass': True,
         
-        # Platform-specific settings
         'allow_multiple_audio_streams': True,
         'nooverwrites': True,
     }
 
-    # Additional platform-specific options
     if platform == 'tiktok':
         ydl_opts['extractor_retries'] = 3
         ydl_opts['no_color'] = True
@@ -126,7 +120,6 @@ def download_video(request):
                     "resolution": info.get('height')
                 })
     except Exception as e:
-        # If primary resolution fails, try fallback
         if resolution != fallback_resolution and fallback_resolution in format_map:
             ydl_opts['format'] = format_map[fallback_resolution]
             try:
