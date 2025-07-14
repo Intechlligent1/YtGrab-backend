@@ -1,25 +1,24 @@
 import os
-from pathlib import Path
 import dj_database_url
-from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()  # Load .env variables
-
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Secret key (should be set as env variable on Render)
 SECRET_KEY = os.getenv('SECRET_KEY', 'your-default-secret-key')
 
-# SECURITY WARNING: don’t run with debug turned on in production!
+# Debug mode (off in production)
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
+# Allowed Hosts
 ALLOWED_HOSTS = [
-    os.getenv('RENDER_EXTERNAL_HOSTNAME', 'localhost'),  # for Render
-    '127.0.0.1',
-    'localhost'
+    "your-app-name.onrender.com",
+    "localhost",
+    "127.0.0.1"
 ]
 
-# Application definition
+# Installed Apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -32,6 +31,7 @@ INSTALLED_APPS = [
     'downloader',
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -64,11 +64,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# PostgreSQL from Render
+# Database Configuration
 DATABASES = {
-    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"), conn_max_age=600)
+    'default': dj_database_url.config(default=os.getenv("DATABASE_URL"))
 }
 
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -76,29 +77,30 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Static files (served via WhiteNoise)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files (optional)
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS settings
+# CORS Settings
 CORS_ALLOWED_ORIGINS = [
     "https://your-frontend-app.vercel.app",
     "https://your-frontend-app.onrender.com",
     "http://localhost:5173",
 ]
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 CORS_ALLOW_HEADERS = [
@@ -113,5 +115,5 @@ CORS_ALLOW_HEADERS = [
     "x-requested-with",
 ]
 
-# 🚫 Remove this to avoid overriding CORS_ALLOWED_ORIGINS
-# CORS_ALLOW_ALL_ORIGINS = True
+# Optional: allow all origins (for debugging; not safe for prod)
+CORS_ALLOW_ALL_ORIGINS = True
